@@ -1,4 +1,4 @@
-const server_manifest = require('../distribution_config/server_manifest.json')
+const server_manifest = require('./manifest/server_manifest.json')
 const fastify = require('fastify')(server_manifest.fastify_options)
 fastify.register(require('fastify-formbody'))
 fastify.register(require('fastify-multipart'))
