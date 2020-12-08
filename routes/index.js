@@ -41,6 +41,7 @@ module.exports = [
             const body = request.body
             try{
                 const signup_res = await User.login(body.username, body.password, body.name)
+                reply.setCookie('user_token', signup_res.user_token, {maxAge:1000*60*60*42, signed:false, sameSite:'none'})
                 return signup_res
             }catch(e){
                 reply.code(301)
