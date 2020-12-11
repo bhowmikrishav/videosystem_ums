@@ -23,7 +23,7 @@ class User extends DB{
         if (!result) throw Object.assign(Error("Username not found"), {code : 202})
         if (result.password != password) throw Object.assign(Error("Incorrect Password"), {code : 202})
         
-        const user_token = jwt.sign( {username:result.username}, private_manifest.USER_TOKEN_KEY, {expiresIn:'1d'} )
+        const user_token = jwt.sign( {username:result.username, user_id:result._id}, private_manifest.USER_TOKEN_KEY, {expiresIn:'1d'} )
         
         return {user_token}
     }
