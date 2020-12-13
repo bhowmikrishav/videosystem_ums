@@ -48,5 +48,26 @@ module.exports = [
                 return {error:e.message, result:null}
             }
         }
+    },
+    {
+        method: 'POST',
+        url: '/whoami',
+        schema:{
+            body:{
+                type: 'object',
+                properties: {
+                    user_token:   {type:'string', maxLength:1000, minLength:8, "pattern": "^([a-z]|[A-Z]|[0-9])*.([a-z]|[A-Z]|[0-9])*.([a-z]|[A-Z]|[0-9])*$"}
+                }
+            }
+        },
+        handler: async (request, reply) => {
+            const body = request.body
+            try{
+                return await User.whoami(body.user_token)
+            }catch(e){
+                reply.code(301)
+                return {error:e.message, result:null}
+            }
+        }
     }
 ]

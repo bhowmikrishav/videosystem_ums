@@ -2,6 +2,7 @@
 const {DB} = require('./connect_db')
 const jwt = require('jsonwebtoken')
 const private_manifest = require('../manifest/private.json')
+const mongodb = require('mongodb')
 
 class User extends DB{
     static create_user_tupple(username, password, name){
@@ -26,6 +27,16 @@ class User extends DB{
         const user_token = jwt.sign( {username:result.username, user_id:result._id}, private_manifest.USER_TOKEN_KEY, {expiresIn:'1d'} )
         
         return {user_token}
+    }
+    static async whoami(user_token){
+        const user = jwt.verify( user_token, private_manifest.USER_TOKEN_KEY )
+        //console.log(user);
+        const user_collection = (await User.mongodb_video_system()).collection('users')
+        const result = await user_collection.findOne(
+            {_id : mongodb.ObjectId(user.user_id)},
+            { projection: { username: 1, name : 1 } }
+        )
+        return result
     }
 }
 
