@@ -56,7 +56,7 @@ module.exports = [
             body:{
                 type: 'object',
                 properties: {
-                    user_token:   {type:'string', maxLength:1000, minLength:8, "pattern": "^([a-z]|[A-Z]|[0-9])*.([a-z]|[A-Z]|[0-9])*.([a-z]|[A-Z]|[0-9])*$"}
+                    user_token:   {type:'string', maxLength:1000, minLength:8, "pattern": "^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"}
                 }
             }
         },
