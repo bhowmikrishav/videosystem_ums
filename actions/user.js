@@ -34,9 +34,22 @@ class User extends DB{
         const user_collection = (await User.mongodb_video_system()).collection('users')
         const result = await user_collection.findOne(
             {_id : mongodb.ObjectId(user.user_id)},
-            { projection: { username: 1, name : 1 } }
+            { projection : { username: 1, name : 1 } }
         )
         return result
+    }
+    static async update_user( user_token, updates){
+        var _updates = {}
+        if(updates.name)
+            _updates['name'] = updates['name']
+        const user = jwt.verify( user_token, private_manifest.USER_TOKEN_KEY )
+        const user_collection = (await User.mongodb_video_system()).collection('users')
+        const result = await user_collection.findOneAndUpdate(
+            {_id : mongodb.ObjectId(user.user_id)},
+            { $set : _updates },
+            { returnOriginal: false }
+        )
+        return result.value
     }
 }
 

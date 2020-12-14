@@ -69,5 +69,27 @@ module.exports = [
                 return {error:e.message, result:null}
             }
         }
+    },
+    {
+        method: 'POST',
+        url: '/update_profile',
+        schema:{
+            body:{
+                type: 'object',
+                properties: {
+                    user_token:   {type:'string', maxLength:1000, minLength:8, "pattern": "^[A-Za-z0-9-_=]+\.[A-Za-z0-9-_=]+\.?[A-Za-z0-9-_.+/=]*$"},
+                    name:         {type:'string', maxLength:63, minLength:1}
+                }
+            }
+        },
+        handler: async (request, reply) => {
+            const body = request.body
+            try{
+                return await User.update_user(body.user_token, body)
+            }catch(e){
+                reply.code(301)
+                return {error:e.message, result:null}
+            }
+        }
     }
 ]
