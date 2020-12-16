@@ -23,9 +23,9 @@ class User extends DB{
         })
         if (!result) throw Object.assign(Error("Username not found"), {code : 202})
         if (result.password != password) throw Object.assign(Error("Incorrect Password"), {code : 202})
-        
+
         const user_token = jwt.sign( {username:result.username, user_id:result._id}, private_manifest.USER_TOKEN_KEY, {expiresIn:'1d'} )
-        
+
         return {user_token}
     }
     static async whoami(user_token){
@@ -34,7 +34,7 @@ class User extends DB{
         const user_collection = (await User.mongodb_video_system()).collection('users')
         const result = await user_collection.findOne(
             {_id : mongodb.ObjectId(user.user_id)},
-            { projection : { username: 1, name : 1 } }
+            { projection : { username: 1, name : 1, meta:1 } }
         )
         return result
     }
@@ -47,7 +47,10 @@ class User extends DB{
         const result = await user_collection.findOneAndUpdate(
             {_id : mongodb.ObjectId(user.user_id)},
             { $set : _updates },
-            { returnOriginal: false }
+            {
+                returnOriginal: false,
+                projection : {name:1, username:1}
+            }
         )
         return result.value
     }
